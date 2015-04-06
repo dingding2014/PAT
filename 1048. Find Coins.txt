@@ -30,6 +30,11 @@ int main()
     return 0;
 }
 public void set(){
-
+      
       this.a=100;
+      //ĞŞ¸Ä²âÊÔ
+}
+private bool get () {
+    
+      return true; 
 }
