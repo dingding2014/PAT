@@ -29,8 +29,10 @@ int main()
 	if(!f) printf("No Solution\n");
     return 0;
 }
+
 public void set(){
       
+
       this.a=100;
       //ĞŞ¸Ä²âÊÔ
 }
