@@ -29,7 +29,7 @@ int main()
 	if(!f) printf("No Solution\n");
     return 0;
 }
-public void set(){
+private void set(){
 
       this.a=100;
 }
