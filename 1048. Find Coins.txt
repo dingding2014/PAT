@@ -1,6 +1,5 @@
 #include<cstdio>
 #include<cstring>
-#include<algorithm>
 using namespace std;
 int a[100001];
 int flag[1001];
