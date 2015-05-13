@@ -1,0 +1,66 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+#include<stack>
+using namespace std;
+stack<int> Stack;
+int leaf[31],inorder[31],postorder[31];
+int pos,kkk;
+void print(int start,int end)
+{
+	if(start==end) 
+	{
+	    postorder[kkk++]=inorder[start];return;
+	}
+	int i;
+    for(i=start;i<=end;i++)
+		if(inorder[i]==leaf[pos])
+		{
+			if(i>start)
+			{
+				pos++;
+		        print(start,i-1);
+			}
+			if(end>i)
+			{
+			    pos++;
+		        print(i+1,end);
+			}
+			print(i,i);
+			break;
+		}
+}
+int main()
+{
+	int n,i,node;
+	int k=0,kk=0;
+	char op[10];
+	scanf("%d",&n);
+	getchar();
+	for(i=0;i<2*n;i++)
+	{
+	    scanf("%s",op);
+		if(strcmp(op,"Push")==0)
+		{
+		   scanf("%d",&node);		  
+		   leaf[k++]=node;
+		   Stack.push(node);
+		   getchar();
+		}
+		else 
+		{
+			inorder[kk++]=Stack.top();
+	        Stack.pop();
+		}
+	}
+	pos=0;kkk=0;
+	print(0,n-1);
+	printf("%d",postorder[0]);
+	for(i=1;i<n;i++)		
+		printf(" %d",postorder[i]);
+    return 0;
+} 

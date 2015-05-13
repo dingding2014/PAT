@@ -1,0 +1,47 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+#include<stack>
+using namespace std;
+int main()
+{
+	char sz[][6]={"ling","yi","er","san","si","wu","liu","qi","ba","jiu"};
+	char dw[][10]={"Yi","Qian","Bai","Shi","Wan","Qian","Bai","Shi",""};
+	char s[15];
+	gets(s);
+	int i=0,len=strlen(s);
+	int start=0;
+	if(s[0]=='-')
+	{
+		printf("Fu ");
+		start=1;
+	}
+	int j=8;
+	int tmp[10];
+	for(i=len-1;i>=start;i--)
+		tmp[j--]=s[i]-'0';
+	j=j+1;
+	printf("%s",sz[tmp[j]]);
+	if(j!=8)
+		printf(" %s",dw[j]);
+	for(j=j+1;j<=8;j++)
+	{
+		if(tmp[j]==0&&j==4)
+		{
+		   printf(" Wan");continue;
+		}
+		if(tmp[j]==0) continue;
+		else 
+		{
+			if((tmp[j-1]==0)&&(j!=5)) printf(" ling");
+		    printf(" %s",sz[tmp[j]]);
+			if(j!=8) printf(" %s",dw[j]);
+		}
+	}
+	printf("\n");
+    return 0;
+} 

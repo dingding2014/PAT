@@ -1,0 +1,53 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+#include<stack>
+using namespace std;
+int l,h;
+struct node
+{
+    char id[15];
+	int virtue,talent,sum;
+	int type;
+}p[100001];
+bool cmp(node a,node b)
+{
+    if(a.type!=b.type) return a.type>b.type;
+	if(a.sum!=b.sum) return a.sum>b.sum;
+	if(a.virtue!=b.virtue) return a.virtue>b.virtue;
+	return strcmp(a.id,b.id)<0;
+}
+int main()
+{
+	int n,i;
+	scanf("%d%d%d",&n,&l,&h);
+	int count=0;
+	char id[15];
+	int vir,tal;
+	for(i=0;i<n;i++)
+	{
+	   getchar();
+	   scanf("%s%d%d",id,&vir,&tal);
+	   if(vir>=l&&tal>=l)
+	   {
+		  strcpy(p[count].id,id);
+		  p[count].virtue=vir;
+		  p[count].talent=tal;
+		  p[count].sum=vir+tal;
+		  if(vir>=h&&tal>=h) p[count].type=4;
+		  else if(vir>=h&&tal<h) p[count].type=3;
+		  else if(vir<h&&tal<h&&vir>=tal) p[count].type=2;
+		  else p[count].type=1;
+	      count++; 
+	   }
+	}
+	sort(p,p+count,cmp);
+	printf("%d\n",count);
+	for(i=0;i<count;i++)
+		printf("%s %d %d\n",p[i].id,p[i].virtue,p[i].talent);
+    return 0;
+} 

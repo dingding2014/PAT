@@ -1,0 +1,91 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<algorithm>
+using namespace std;
+int a[101],b[101],n;
+bool check(int x[],int y[])
+{
+    for(int i=0;i<n;i++)
+		if(x[i]!=y[i]) return false;
+	return true;
+}
+void print(int *p)
+{
+    printf("%d",p[0]);
+    for(int j=1;j<n;j++)
+	      printf(" %d",p[j]);
+	printf("\n");
+}
+bool insert_sort(int *p)
+{
+	bool f_same=false;
+    for(int i=1;i<n;i++)
+	{
+		for(int j=0;j<i;j++)
+		{
+		   if(p[i]<p[j])
+		   {
+			  int t=p[i];
+			  for(int q=i-1;q>=j;q--)
+				  p[q+1]=p[q];
+			  p[j]=t;
+		      break;
+		   }
+		}
+		if(f_same) 
+		{
+           printf("Insertion Sort\n");
+		   print(p);
+		   return true;
+		}
+		if(check(p,b)) f_same=true;
+	}
+	return false;
+}
+bool merger_sort(int *p)
+{
+	bool f_same=false;
+	for(int len=2;len/2<=n;len*=2)           //²»ÊÇlen<n£¡£¡£¡
+	{
+	   int start=-len;
+	   while(true)
+	   {
+	      start+=len;
+		  if(start>=n) break;
+		  if(start+len>=n-1) sort(p+start,p+n);
+	      else sort(p+start,p+start+len);
+	   }
+	   if(f_same)
+	   {
+	      print(p);
+		  return true;
+	   }
+	   if(check(p,b)) f_same=true;
+	}
+	return false;
+}
+int main()
+{
+	int i,tmp[101];
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{
+		scanf("%d",&a[i]);
+		tmp[i]=a[i];
+	}
+	for(i=0;i<n;i++)
+	{
+		scanf("%d",&b[i]);
+	}
+	if(!insert_sort(tmp))
+	{
+		for(i=0;i<n;i++)
+			tmp[i]=a[i];
+	    printf("Merge Sort\n");
+		merger_sort(tmp);
+	}
+	
+    return 0;
+} 

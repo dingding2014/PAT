@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+#include<stack>
+using namespace std;
+const int lim=317;
+
+stack<int> Stack;
+int bucket[lim];
+int table[100005];
+
+void peekMedian()                 //分块查找，单次时间复杂度为根号n,用于在线插入删除查询！费点空间复杂度！
+{
+	int K=Stack.size();
+	if(K%2) K=(K+1)/2;
+	else K/=2;
+	int sum=0;
+	int idx=0;
+	for(idx=0;idx<lim;idx++)
+	{
+	  if(sum+bucket[idx]<K) sum+=bucket[idx];
+	  else break;
+	}
+	int b=idx*lim;
+	while(true)
+	{
+	   sum+=table[b];
+	   if(sum>=K)
+	   {
+	      printf("%d\n",b);
+		  break;
+	   }
+	   b++;
+	}
+}
+int main()
+{
+	memset(bucket,0,sizeof(bucket));
+	memset(table,0,sizeof(table));
+	int n,i,num;
+	char op[15];
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{
+	   scanf("%s",op);
+	   if(strcmp(op,"Push")==0)
+	   {
+		  scanf("%d",&num);
+		  Stack.push(num);
+		  bucket[num/lim]++;
+		  table[num]++;
+	   }
+	   else if(strcmp(op,"Pop")==0)
+	   {
+		  if(Stack.empty()) printf("Invalid\n");
+		  else
+		  {
+			  int x=Stack.top();
+			  bucket[x/lim]--;
+			  table[x]--;
+			  printf("%d\n",x);	
+			  Stack.pop();
+		  }
+	   }
+	   else
+	   {
+		  if(Stack.empty()) printf("Invalid\n"); 
+		  else peekMedian();
+	   }
+	}
+    return 0;
+} 

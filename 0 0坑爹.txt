@@ -1,0 +1,22 @@
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+int main()
+{
+  int a,b;
+  bool start=true,f=false;
+  while(scanf("%d",&a)!=EOF)
+  {
+     scanf("%d",&b);
+     if(b==0) continue;
+	 f=true;
+     if(start)
+     {
+        printf("%d %d",a*b,b-1);
+        start=false;
+     }
+     else printf(" %d %d",a*b,b-1);
+  }
+  if(!f) printf("0 0\n");
+    return 0;
+} 

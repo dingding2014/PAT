@@ -1,0 +1,97 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int n,m,k,d;
+int mapp[1020][1020],dis[1020];
+bool vis[1020];
+const int INF=1000000000;
+int get_id(char *p)
+{
+	int len=strlen(p);
+	if(p[0]=='G')
+	{
+	   if(len==2) return n+p[1]-'0';
+	   else return n+(p[1]-'0')*10+p[2]-'0';
+	}
+	else 
+	{
+	   if(len==1) return p[0]-'0';
+	   else if(len==2) return (p[0]-'0')*10+p[1]-'0';
+	   else if(len==3) return (p[0]-'0')*100+(p[1]-'0')*10+p[2]-'0';
+	   else  return 1000;
+	}
+}
+void dij(int s)
+{
+    memset(vis,false,sizeof(vis));
+	fill(dis,dis+1020,INF);
+	dis[s]=0;
+	for(int i=0;i<n+m;i++)
+	{
+	   int u=-1,min=INF;
+	   for(int j=1;j<=n+m;j++)
+		   if(!vis[j]&&dis[j]<min)
+		   {
+		      u=j;min=dis[j];
+		   }
+	   if(u==-1) return;
+	   vis[u]=true; 
+	   for(int v=1;v<=n+m;v++)
+		   if(!vis[v]&&mapp[u][v]!=INF)
+			   if(dis[u]+mapp[u][v]<dis[v])
+				   dis[v]=dis[u]+mapp[u][v];
+	}
+}
+int main()
+{
+	int i,length,result_id;
+	double averager,result_averager,min_dis;
+	char s[5],e[5];
+	fill(mapp[0],mapp[0]+1020*1020,INF);
+	scanf("%d%d%d%d",&n,&m,&k,&d);
+	for(i=0;i<k;i++)
+	{
+	   scanf("%s %s %d",s,e,&length);
+	   int s_id=get_id(s);
+	   int e_id=get_id(e);
+	   mapp[s_id][e_id]=mapp[e_id][s_id]=length;
+	}
+	bool flag=false;
+	double maxx=-1;
+	result_averager=INF;
+	for(i=1;i<=m;i++)
+	{
+	   dij(i+n);
+	   min_dis=INF;averager=0;
+	   for(int j=1;j<=n;j++)
+	   {
+		   if(dis[j]>d)
+		   {
+			  min_dis=-1;
+		      break;
+		   }
+		   if(dis[j]<min_dis) min_dis=dis[j];
+		   averager+=(1.0*dis[j])/n;
+	   }
+	   if(min_dis==-1) continue;
+	   if(min_dis>maxx||((min_dis==maxx)&&(averager<result_averager))) 
+	   {
+		  flag=true;
+	      maxx=min_dis;
+		  result_averager=averager;
+		  result_id=i;
+	   }
+	}
+	if(flag)
+	{
+		printf("G%d\n",result_id);
+		printf("%.1f %.1f\n",maxx,result_averager);
+	}
+	else printf("No Solution\n");
+    return 0;
+} 

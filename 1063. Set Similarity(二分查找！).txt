@@ -1,0 +1,60 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+#include<stack>
+using namespace std;
+int num[10001],distinct[51][10001],len[51];
+bool flag;
+void search(int s,int e,int data,int pos)
+{
+	while(s<=e)
+	{
+       int mid=(s+e)/2;
+	   if(distinct[pos][mid]==data) 
+	  {
+	     flag=true;break;
+	  }
+	   else if(distinct[pos][mid]<data) s=mid+1;
+	   else if(distinct[pos][mid]>data) e=mid-1;
+	}
+}
+int main()
+{
+	int n,i,j,k,m,v;
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{
+	    scanf("%d",&m);
+		for(j=0;j<m;j++)		
+		   scanf("%d",&num[j]);
+		sort(num,num+m);
+		int kk=0;
+		distinct[i][kk++]=num[0];
+	    for(j=1;j<m;j++)
+			if(num[j]!=num[j-1])			
+				distinct[i][kk++]=num[j];		
+		len[i]=kk;	
+	}
+	scanf("%d",&k);
+	int a,b;
+	int nc,nt;
+	for(i=0;i<k;i++)
+	{
+	    scanf("%d%d",&a,&b);
+		nc=0;		
+		for(j=0;j<len[a-1];j++)		
+		{
+			flag=false;
+		    search(0,len[b-1]-1,distinct[a-1][j],b-1);
+			if(flag) nc++;
+		}
+		nt=len[a-1]+len[b-1]-nc;
+		double result=(double)nc/nt*100;
+        printf("%.1f%%\n",result);		
+	}
+    return 0;
+} 

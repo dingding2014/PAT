@@ -1,0 +1,30 @@
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+bool flag[100001];
+int main()
+{
+	int i;
+    memset(flag,false,sizeof(flag));
+	for(i=3;i<320;i+=2)
+		if(!flag[i])
+		{
+		   for(int j=3*i;j<100001;j+=2*i)
+			   flag[j]=true;
+		}
+    int prime[100001]={2};
+	int k=1;
+	for(i=3;i<100001;i+=2)	
+		if(!flag[i]) prime[k++]=i;
+	int n,count=0;
+	scanf("%d",&n);
+	for(i=0;i<k-1;i++)
+	{
+	   if(prime[i+1]>n) break;
+	   if(prime[i+1]-prime[i]==2) count++;
+	}
+	printf("%d\n",count);	
+	
+	
+    return 0;
+} 

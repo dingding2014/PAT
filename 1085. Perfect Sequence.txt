@@ -1,0 +1,31 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main()
+{
+	int n,p,i,j,a[100001];
+	scanf("%d%d",&n,&p);
+	for(i=0;i<n;i++)
+		scanf("%d",&a[i]);
+	sort(a,a+n);
+	i=j=0;
+	int max=0;
+	while(i<n)
+	{
+	   while((long long)a[j]<=(long long)a[i]*p)  
+	   {
+	      j++;
+		  if(j==n) break;
+	   }
+	   if(j-i>max) max=j-i;
+	   if(j==n) break;
+	   i++;
+	}
+	printf("%d\n",max);
+    return 0;
+} 
