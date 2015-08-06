@@ -1,0 +1,79 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<map>
+#include<stack>
+#include<queue>
+#include<iostream>
+using namespace std;
+int postOrder[31],inOrder[31];
+int pos,n;
+struct node
+{
+        int data;
+	struct node *l,*r;
+};
+node *root;
+int result[31],tt;
+void dfs(node *f,int s,int e,int dir)
+{
+	if(s>e) return;
+	pos--; 
+        node *leaf=new node;
+	leaf->data=postOrder[pos];
+	leaf->l=leaf->r=NULL;
+	if(f!=NULL)
+       {
+	    if(dir==0)
+			f->l=leaf;		
+	    else
+			f->r=leaf;	
+	}
+	else root=leaf;
+		
+	if(s==e) return;
+        int i,flag_pos=-1;
+	for(i=0;i<n;i++)
+		if(inOrder[i]==postOrder[pos])
+		{
+		   flag_pos=i;
+		   break;
+		}
+	if(flag_pos==-1) return;
+	dfs(leaf,flag_pos+1,e,1);
+	dfs(leaf,s,flag_pos-1,0);
+}
+void bfs()
+{
+        queue<node> Queue;
+	Queue.push(*root);
+	tt=0;
+	while(!Queue.empty())
+	{
+		node tmp=Queue.front();
+		result[tt++]=tmp.data;
+		Queue.pop();
+		if(tmp.l!=NULL) Queue.push(*tmp.l);
+		if(tmp.r!=NULL) Queue.push(*tmp.r);
+	}
+}
+int main()
+{
+	int i;
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+		scanf("%d",&postOrder[i]);
+	for(i=0;i<n;i++)
+		scanf("%d",&inOrder[i]);
+	pos=n;
+	dfs(NULL,0,n-1,1);
+	bfs();
+	printf("%d",result[0]);
+	for(i=1;i<tt;i++)
+		printf(" %d",result[i]);
+	printf("\n");
+	return 0;
+}
+

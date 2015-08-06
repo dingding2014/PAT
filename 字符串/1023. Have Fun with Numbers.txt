@@ -1,0 +1,44 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+int flag[10];
+int flag1[10];
+int main()
+{
+	char num[21];
+	gets(num);
+	int len=strlen(num),i;
+	char ans[21];
+	ans[len]='\0';
+	int add=0;
+	memset(flag,0,sizeof(flag));
+	memset(flag1,0,sizeof(flag1));
+	for(i=len-1;i>=0;i--)
+	{
+		int t=num[i]-'0';
+		flag[t]++;                      //统计每个数字个数.题目中有"with no duplication"。每个数字的个数不能复制、多倍！
+        ans[i]=(t*2+add)%10+'0';
+		flag1[ans[i]-'0']++;
+	    add=(add+t*2)/10;
+	}
+	if(add==1)
+	{
+	   printf("No\n");
+	   printf("1%s\n",ans);
+	}
+	else 
+	{
+	   bool f=true;
+	   for(i=0;i<10;i++)
+		   if(flag[i]!=flag1[i]) 
+		   {
+		      f=false;break;
+		   }
+	   if(f) printf("Yes\n");
+	   else printf("No\n");
+	   printf("%s\n",ans);
+	}
+	
+    return 0;
+}

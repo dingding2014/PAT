@@ -1,0 +1,147 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<map>
+#include<queue>
+#include<iostream>
+using namespace std;
+const int INF=2100000000;
+queue<int> Queue[101],waiting,vip_waiting;
+int n,served_count[101];
+bool table_vip[101];
+struct node
+{
+    int arrive_time,span,serving_time;
+	bool vip;
+}p[10001];
+bool cmp(node a,node b)
+{
+	return a.arrive_time<b.arrive_time;
+}
+bool cmp1(node a,node b)
+{
+	return a.serving_time<b.serving_time;
+}
+void print_time(int s_time)
+{
+    int h=s_time/3600+8;
+	int m=(s_time-(h-8)*3600)/60;
+	int s=s_time%60;
+	printf("%02d:%02d:%02d ",h,m,s);
+}
+int main()
+{
+	int i,h,m,s,span,vip_flag;
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{
+	   scanf("%d:%d:%d %d %d",&h,&m,&s,&span,&vip_flag);
+	   p[i].arrive_time=(h-8)*3600+m*60+s;
+	   p[i].span=span*60;
+	   p[i].serving_time=INF;
+	   if(vip_flag) p[i].vip=true;
+	   else p[i].vip=false;
+	}
+	sort(p,p+n,cmp);
+	int mm,k;
+	scanf("%d%d",&k,&mm);
+	memset(table_vip,false,sizeof(table_vip));
+	for(i=0;i<mm;i++)
+	{
+		int id;
+		scanf("%d",&id);
+		table_vip[id]=true;
+	}
+	memset(served_count,0,sizeof(served_count));
+	int wait_id=0;
+	int cur_time=p[0].arrive_time;
+	int empty=0;
+	priority_queue<int,vector<int>,greater<int>> empty_table;
+	for(i=1;i<=k;i++)
+		empty_table.push(i);
+	while(cur_time<46800)
+	{
+		int minn_leaving=INF;
+	    for(i=1;i<=k;i++)
+		{
+			if(Queue[i].size()==0) continue;		
+			int serving_id=Queue[i].front();
+			int leaving_time=p[serving_id].serving_time+p[serving_id].span;
+			if(leaving_time<=cur_time) 
+			{
+			   Queue[i].pop();
+			   empty_table.push(i);
+			}
+			else 
+			{
+			    if(leaving_time<minn_leaving) minn_leaving=leaving_time;
+			}
+		}
+		for(i=wait_id;i<n;i++)
+		{
+			if(p[i].arrive_time<=cur_time)
+			{
+			   if(p[i].vip) vip_waiting.push(i);
+			   else waiting.push(i);
+			}
+			else break;
+		}
+        wait_id=i;
+		while((empty_table.size()!=0)&&(waiting.size()!=0||vip_waiting.size()!=0))
+		{
+			int table_id=empty_table.top();
+	        empty_table.pop();
+			int person_id;
+			if(table_vip[table_id])
+			{
+				if(vip_waiting.size()!=0)
+				{
+					person_id=vip_waiting.front();
+					vip_waiting.pop();	
+				}
+				else 
+				{
+				    person_id=waiting.front();
+				    waiting.pop();
+				}
+			}
+			else 
+			{
+				if((vip_waiting.size()==0)||(waiting.size()!=0&&(p[waiting.front()].arrive_time<p[vip_waiting.front()].arrive_time)))
+				{
+				    person_id=waiting.front();
+				    waiting.pop();
+				}
+				else 
+				{
+				    person_id=vip_waiting.front();
+					vip_waiting.pop();	
+				}
+			}
+			p[person_id].serving_time=cur_time;
+		    Queue[table_id].push(person_id);
+			if(p[person_id].serving_time+p[person_id].span<minn_leaving) minn_leaving=p[person_id].serving_time+p[person_id].span;
+			served_count[table_id]++;
+		}
+		if(wait_id>=n) break;
+		cur_time=min(minn_leaving,p[wait_id].arrive_time);
+	}
+	sort(p,p+n,cmp1);
+	for(i=0;i<n;i++)
+	{
+		if(p[i].serving_time==INF) break;
+		print_time(p[i].arrive_time);
+		print_time(p[i].serving_time);
+		int waiting_time=(p[i].serving_time-p[i].arrive_time)/60;
+		if((p[i].serving_time-p[i].arrive_time)%60>=30) waiting_time++;
+		printf("%d\n",waiting_time);
+	}
+	printf("%d",served_count[1]);
+	for(i=2;i<=k;i++)
+		printf(" %d",served_count[i]);
+	printf("\n");
+	return 0;
+}
+

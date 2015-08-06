@@ -1,0 +1,122 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<map>
+#include<string>
+#include<queue>
+using namespace std;
+const int INF=2100000000;
+int n,home,max_sum,max_averager;
+int weight[201][201],dis[201],tmp_Path[201];
+int happiness[201];
+bool vis[201];
+vector<int>pre[201];
+int result[201],countt,length,kkk;
+map<string,int> m;
+char city_name[201][5];
+bool flag;
+void dij(int s)
+{
+	int i,j;
+	dis[s]=0;	
+    for(i=0;i<=n;i++)
+	{
+	   int min=INF,u=-1;
+	   for(j=0;j<=n;j++)
+		   if(vis[j]&&dis[j]<min)
+		   {
+		      min=dis[j];
+			  u=j;
+		   }
+	   if(u==-1) return;
+	   vis[u]=false;
+	   if(flag) length=+dis[u];
+	   if(u==home) flag=false;
+	   for(int v=1;v<=n;v++)
+		   if(vis[v]&&weight[u][v]!=INF)
+		   {
+		      if(dis[u]+weight[u][v]<dis[v])	
+			  {
+			      dis[v]=dis[u]+weight[u][v];	
+				  pre[v].clear();
+				  pre[v].push_back(u);
+			  }
+			  else if(dis[u]+weight[u][v]==dis[v])
+			  {
+				  pre[v].push_back(u);
+			  }
+		   }
+	}
+}
+void dfs(int f,int kk)
+{
+	tmp_Path[kk]=f;
+	if(f==0)
+	{
+		countt++;
+	    int j=kk;
+		int tmp_sum=0,tmp_averager=0;
+		for(;j>=0;j--)
+		{
+		   int id=tmp_Path[j];
+		   tmp_sum+=happiness[id];
+		}
+		tmp_averager=tmp_sum/kk;
+		if(tmp_sum>max_sum||(tmp_sum==max_sum)&&(tmp_averager>max_averager))
+		{
+		   max_sum=tmp_sum;
+		   max_averager=tmp_averager;
+		   kkk=0;
+		   for(j=kk;j>=0;j--)
+			   result[kkk++]=tmp_Path[j];
+		}
+		return;
+	}
+    int i,len=pre[f].size();
+	for(i=0;i<len;i++)
+		dfs(pre[f][i],kk+1);
+}
+int main()
+{
+	int i,j,k;
+	char start[5];
+	scanf("%d %d %s",&n,&k,start);
+	strcpy(city_name[0],start);
+	for(i=0;i<=n;i++)
+	{
+		for(j=0;j<=n;j++)
+			weight[i][j]=INF;
+		dis[i]=INF;                              //dis,vis初始化不能忘，下次也可以写到dij函数里！！！
+		vis[i]=true;
+	}
+	m[start]=0;
+	happiness[0]=0;
+	for(i=1;i<n;i++)
+	{
+		scanf("%s %d",&city_name[i],&happiness[i]);
+		if(strcmp(city_name[i],"ROM")==0) home=i;
+		m[city_name[i]]=i;
+	}
+	char s[5],e[5];
+	int cost;
+	for(i=0;i<k;i++)
+	{
+	    scanf("%s %s %d",s,e,&cost);
+		int s_id=m[s];
+		int e_id=m[e];
+		weight[s_id][e_id]=weight[e_id][s_id]=cost;
+	}
+	
+	flag=true;
+	length=0;
+	dij(0);
+	max_sum=max_averager=-1;
+	countt=0;
+	dfs(home,0);
+	printf("%d %d %d %d\n",countt,length,max_sum,max_averager);
+	printf("%s",city_name[result[0]]);
+	for(i=1;i<kkk;i++)
+		printf("->%s",city_name[result[i]]);
+    return 0;
+}

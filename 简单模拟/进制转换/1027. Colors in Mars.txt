@@ -1,0 +1,37 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<stack>
+using namespace std;
+void solve(int num)
+{
+   stack<int> Stack;
+   if(num==0)                    //等于0直接打印！
+   {
+       printf("00");return;
+   }
+   while(num)
+   {
+	   Stack.push(num%13);
+	   num/=13;
+   }
+   if(Stack.size()==1) printf("0");
+   while(!Stack.empty())
+   {
+	   int tt=Stack.top();
+	   if(tt>9) printf("%c",(tt-10)+'A');
+	   else printf("%d",tt);
+	   Stack.pop();
+   }
+}
+int main()
+{
+	int a[3];
+	for(int i=0;i<3;i++)
+	   scanf("%d",&a[i]);
+	printf("#");
+	for(int i=0;i<3;i++)
+	     solve(a[i]);
+	printf("\n");
+    return 0;
+}

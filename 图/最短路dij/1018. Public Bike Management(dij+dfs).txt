@@ -1,0 +1,124 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<queue>
+using namespace std;
+const int INF=2100000000;
+int Cmax,n,Sp,m;
+int ans[501],weight[501][501],dis[501],need[501],remain[501],tmp_Path[501];
+bool vis[501];
+vector<int>pre[501];
+int result[501],min_need,min_remain,kkk;
+void dij(int s)                                           //dij里不能更新need,remain，应为这个两个变量不具备最优子结构！
+{
+	int i,j;
+	dis[0]=0;	
+    for(i=0;i<=n;i++)
+	{
+	   int min=INF,u=-1;
+	   for(j=0;j<=n;j++)
+		   if(vis[j]&&dis[j]<min)
+		   {
+		      min=dis[j];
+			  u=j;
+		   }
+	   if(u==-1) return;
+	   vis[u]=false;
+	   for(int v=1;v<=n;v++)
+		   if(vis[v]&&weight[u][v]!=INF)
+		   {
+		      if(dis[u]+weight[u][v]<dis[v])	
+			  {
+			      dis[v]=dis[u]+weight[u][v];	
+				  pre[v].clear();
+				  pre[v].push_back(u);
+			  }
+			  else if(dis[u]+weight[u][v]==dis[v])
+			  {
+				  pre[v].push_back(u);              //记录前缀，搜索时更有效率
+			  }
+		   }
+	}
+}
+void dfs(int f,int kk)
+{
+   tmp_Path[kk]=f;
+   if(f==0)
+   {
+	  int j=kk;
+	  need[kk]=remain[kk]=0;
+	  for(j=kk-1;j>=0;j--)
+	  {
+		 int id=tmp_Path[j];
+	     if(ans[id]<Cmax)
+		 {
+			int add=Cmax-ans[id];
+		    if(remain[j+1]>=add) 
+			{
+			   need[j]=need[j+1];
+			   remain[j]=remain[j+1]-add;
+			}
+			else 
+			{
+			   need[j]=need[j+1]+add-remain[j+1];
+			   remain[j]=0;
+			}
+		 }
+		 else if(ans[id]==Cmax)
+		 {
+		     need[j]=need[j+1];
+			 remain[j]=remain[j+1];
+		 }
+		 else 
+		 {
+		     need[j]=need[j+1];
+			 remain[j]=remain[j+1]+ans[id]-Cmax;              //这里ans下标应为id!
+		 }		  
+	  }
+	 
+	  if((need[0]<min_need)||(need[0]==min_need&&remain[0]<min_remain))
+	  {
+		  min_need=need[0];
+	      min_remain=remain[0];
+	      kkk=0;
+		  for(int j=kk;j>=0;j--)
+		     result[kkk++]=tmp_Path[j];
+	  }
+      return;
+   }
+   int i,len=pre[f].size();  
+   for(i=0;i<len;i++)	  
+	   dfs(pre[f][i],kk+1);
+}
+int main()
+{
+	int i,j;
+	scanf("%d%d%d%d",&Cmax,&n,&Sp,&m);
+	Cmax/=2;
+	for(i=1;i<=n;i++)
+	{
+		scanf("%d",&ans[i]);
+		dis[i]=INF;
+	}
+	for(i=0;i<=n;i++)
+		for(j=0;j<=n;j++)
+			weight[i][j]=INF;
+	int s,e,length;
+	for(i=0;i<m;i++)
+	{
+	   scanf("%d%d%d",&s,&e,&length);
+	   weight[s][e]=weight[e][s]=length;
+	}
+	memset(vis,true,sizeof(vis));
+	
+	dij(0);
+	min_need=min_remain=INF;
+	
+	dfs(Sp,0);
+	printf("%d %d",min_need,result[0]);
+	for(i=1;i<kkk;i++)
+		printf("->%d",result[i]);
+	printf(" %d\n",min_remain);
+    return 0;
+}

@@ -1,0 +1,71 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<stack>
+#include<queue>
+#include<map>
+using namespace std;
+map<int,int> m;
+struct node
+{
+   int address,next;
+   char data;
+}p[100002],list1[100002],list2[100002];
+int main()
+{
+	int start1,start2,n,i,j;
+	scanf("%d%d%d",&start1,&start2,&n);
+	for(i=1;i<=n;i++)
+	{
+		scanf("%d %c %d",&p[i].address,&p[i].data,&p[i].next);
+		m[p[i].address]=i;
+	}
+	if(m[start1]==0||m[start2]==0) 
+	{
+	    printf("-1\n");return 0;
+	}
+	int k1,k2;
+	k1=0;
+	int pos=start1;
+	while(true)
+	{
+		if(pos==-1)
+			break;
+	    int id=m[pos];
+		list1[k1].address=p[id].address;
+		list1[k1].data=p[id].data;
+		list1[k1].next=p[id].next;
+		pos=p[id].next;
+		k1++;
+	}
+	pos=start2;
+	k2=0;
+	while(true)
+	{
+		if(pos==-1)				
+			break;		
+	    int id=m[pos];
+		list2[k2].address=p[id].address;
+		list2[k2].data=p[id].data;
+		list2[k2].next=p[id].next;
+		pos=p[id].next;
+		k2++;
+	}
+	bool flag=false;
+	i=k1-1;j=k2-1;
+	int result_pos;
+	while(i>=0&&j>=0)
+	{
+		if(list1[i].address==list2[j].address)
+		{
+		    flag=true;
+			result_pos=list1[i].address;
+		}
+		else break;
+		i--;j--;
+	}
+	if(flag) printf("%05d\n",result_pos);      //Õ¼5Î»Å¶£¡
+	else printf("-1\n");
+    return 0;
+}

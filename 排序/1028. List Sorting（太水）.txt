@@ -1,0 +1,38 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<stack>
+using namespace std;
+struct node
+{
+	char id[7];
+    int grade;
+	char name[10];
+}p[100001];
+bool cmp1(node a,node b)
+{
+	return strcmp(a.id,b.id)<0;
+}
+bool cmp2(node a,node b)
+{
+	if(strcmp(a.name,b.name)==0) return strcmp(a.id,b.id)<0;
+	else return strcmp(a.name,b.name)<0;
+}
+bool cmp3(node a,node b)
+{
+	if(a.grade==b.grade) return strcmp(a.id,b.id)<0;
+	return a.grade<b.grade;
+}
+int main()
+{
+	int n,c,i;
+	scanf("%d%d",&n,&c);
+	for(i=0;i<n;i++)
+	     scanf("%s %s %d",p[i].id,p[i].name,&p[i].grade);
+	if(c==1) sort(p,p+n,cmp1);
+	else if(c==2) sort(p,p+n,cmp2);
+	else sort(p,p+n,cmp3);
+	for(i=0;i<n;i++)
+		printf("%s %s %d\n",p[i].id,p[i].name,p[i].grade);
+    return 0;
+}

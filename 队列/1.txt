@@ -1,0 +1,104 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<map>
+#include<queue>
+#include<iostream>
+using namespace std;
+const int INF=2100000000;
+int n,k;
+struct node
+{
+	int arriving_time;
+	int waiting_time;
+	int span;
+}p[10001];
+bool cmp(node a,node b)
+{
+	return a.arriving_time<b.arriving_time;
+}
+int main()
+{
+	int i;
+	scanf("%d%d",&n,&k);
+	int hour,minute,second,span;
+	int count=0;
+	for(i=0;i<n;i++)
+	{
+	   scanf("%d:%d:%d %d",&hour,&minute,&second,&span);
+	   if(hour>=17&&(minute>0||second>0)) continue;
+	   p[count].span=span*60;
+	   p[count].waiting_time=0;
+	   p[count].arriving_time=hour*3600+minute*60+second;
+	   if(p[count].arriving_time<28800)
+	   {
+		   p[count].waiting_time=28800-p[count].arriving_time;
+		   printf("care %d\n",p[count].waiting_time);
+		   p[count].arriving_time=28800;
+	   }
+	   count++;
+	}
+	sort(p,p+count,cmp);
+	int cur_time=p[0].arriving_time;
+	queue<int> Queue[101];
+	queue<int> empty;
+	queue<int> waiting;
+	int wait_id=0;
+	int ans=0;
+	for(i=0;i<k;i++)
+		empty.push(i);
+	while(cur_time<=54000)
+	{
+		printf("当前时间 :%d\n",cur_time);
+		int first_leaving=INF;
+	    for(i=0;i<k;i++)
+		{
+			if(Queue[i].empty()) continue;
+			int id=Queue[i].front();
+			int leaving_time=p[id].arriving_time+p[id].waiting_time+p[id].span;
+			if(leaving_time<=cur_time)
+			{
+				Queue[i].pop();
+				empty.push(i);
+			}
+			else 
+			{
+			    if(leaving_time<first_leaving) first_leaving=leaving_time;
+			}
+		}
+		for(i=wait_id;i<count;i++)
+		{
+			if(p[i].arriving_time<=cur_time) waiting.push(i);
+			else break;
+		}
+		wait_id=i;
+		while(!empty.empty()&&!waiting.empty())
+		{
+			int windows_id=empty.front();
+			int person_id=waiting.front();
+			Queue[windows_id].push(person_id);
+			ans++;
+			printf("original= %d id=%d\n",p[person_id].waiting_time,person_id);
+			p[person_id].waiting_time=p[person_id].waiting_time+cur_time-p[person_id].arriving_time;
+			if(p[person_id].span+cur_time<first_leaving) first_leaving=p[person_id].span+cur_time;
+			empty.pop();
+			waiting.pop();
+		}
+		if(ans==count) break;
+		if(wait_id<count) cur_time=min(first_leaving,p[wait_id].arriving_time);
+		else cur_time=first_leaving;
+	}
+	double sum=0;
+	for(i=0;i<count;i++)
+	{
+		printf("waiting time= %d\n",p[i].waiting_time);
+		sum+=p[i].waiting_time;
+	}
+	printf("sum =%f\n",sum);
+	sum/=60;
+	printf("%.1f\n",sum/count);
+	return 0;
+}
+

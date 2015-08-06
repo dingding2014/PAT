@@ -1,0 +1,40 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<stack>
+#include<queue>
+#include<map>
+using namespace std;
+vector<int> v[175761];
+int main()
+{
+	int i,j,n,k,m,index;
+	scanf("%d%d",&n,&k);
+	char c1,c2,c3,d;
+	
+	for(i=0;i<k;i++)
+	{
+	   scanf("%d%d",&index,&m);
+	   for(j=0;j<m;j++)
+	   {
+		   getchar();
+	       scanf("%c%c%c%c",&c1,&c2,&c3,&d);
+		   int id=(c1-'A')*6760+(c2-'A')*260+(c3-'A')*10+d-'0';
+		   v[id].push_back(index);
+	   }
+	}
+	for(i=0;i<n;i++)
+	{
+		 getchar();
+	     scanf("%c%c%c%c",&c1,&c2,&c3,&d);
+		 int id=(c1-'A')*6760+(c2-'A')*260+(c3-'A')*10+d-'0';
+		 printf("%c%c%c%c %d",c1,c2,c3,d,v[id].size());
+		 sort(v[id].begin(),v[id].end());
+		 vector<int>::iterator it;
+		 for(it=v[id].begin();it!=v[id].end();it++)
+			 printf(" %d",*it);
+		 printf("\n");
+	}
+    return 0;
+}

@@ -1,0 +1,41 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<stack>
+using namespace std;
+int a[60],b[60];
+void print(int pos)
+{
+   int num=b[pos];
+   if(num<=13) printf("S%d",num);
+   else if(num<=26) printf("H%d",num-13);
+   else if(num<=39) printf("C%d",num-26);
+   else if(num<=52) printf("D%d",num-39);
+   else printf("J%d",num-52);
+}
+int main()
+{
+	int i,k;
+	scanf("%d",&k);
+	for(i=1;i<=54;i++)
+		scanf("%d",&a[i]);
+	for(i=1;i<=54;i++)
+	{
+		int j=0;
+		int next=a[i];
+	    while(j<k-1)
+		{
+		    next=a[next];
+			j++;
+		}
+		b[next]=i;
+	}
+	print(1);
+	for(i=2;i<=54;i++)
+	{
+	    printf(" ");
+		print(i);
+	}
+    return 0;
+}

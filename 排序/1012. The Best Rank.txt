@@ -1,0 +1,85 @@
+#include<cstdio>
+#include<cstring>
+#include<map>
+#include<algorithm>
+#include<iostream>
+using namespace std;
+int n,m;
+struct node
+{
+    int id;
+	double score[4];
+	int rank[4];
+}p[2001];
+map<int,int> Map;
+bool cmp1(node a,node b)
+{
+	return a.score[0]>b.score[0];
+}
+bool cmp2(node a,node b)
+{
+	return a.score[1]>b.score[1];
+}
+bool cmp3(node a,node b)
+{
+	return a.score[2]>b.score[2];
+}
+bool cmp4(node a,node b)
+{
+	return a.score[3]>b.score[3];
+}
+void paiming(int flag)
+{
+	int i;
+	p[0].rank[flag]=1;
+    for(i=1;i<n;i++)
+	{
+		if(p[i].score[flag]<p[i-1].score[flag]) p[i].rank[flag]=i+1;
+		else p[i].rank[flag]=p[i-1].rank[flag];
+	}
+}
+int main()
+{
+	int i;
+	char result[4]={'A','C','M','E'};
+	Map.clear();
+	scanf("%d%d",&n,&m);
+	for(i=0;i<n;i++)
+	{
+	    scanf("%d%lf%lf%lf",&p[i].id,&p[i].score[1],&p[i].score[2],&p[i].score[3]);
+		p[i].score[0]=(p[i].score[1]+p[i].score[2]+p[i].score[3])/3;
+		Map[p[i].id]=1;
+	}
+	sort(p,p+n,cmp1);
+	paiming(0);
+	sort(p,p+n,cmp2);
+	paiming(1);
+	sort(p,p+n,cmp3);
+	paiming(2);
+	sort(p,p+n,cmp4);
+	paiming(3);
+	int j;
+	for(i=0;i<m;i++)
+	{
+		int id;
+	    scanf("%d",&id);
+		if(Map[id]!=1) printf("N/A\n");
+		else 
+		{
+		   for(j=0;j<n;j++)
+		     if(p[j].id==id)
+			 {
+				int max_rank=2100000000,u;
+			    for(int v=0;v<4;v++)
+					if(p[j].rank[v]<max_rank)
+					{
+					   max_rank=p[j].rank[v];
+					   u=v;
+					}
+			    printf("%d %c\n",max_rank,result[u]);
+				break;
+			 }
+		}
+	}
+    return 0;
+}

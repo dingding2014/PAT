@@ -1,0 +1,50 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<map>
+#include<stack>
+#include<queue>
+#include<iostream>
+using namespace std;
+int result[101],k;
+void solve(int n,int d)
+{
+	stack<int> Stack;
+	while(true)
+	{
+		Stack.push(n%d);
+		n/=d;
+		if(n==0) break;
+	}
+	while(!Stack.empty())
+	{
+		result[k++]=Stack.top();
+		Stack.pop();
+	}
+}
+int main()
+{
+	int n,D;
+	scanf("%d%d",&n,&D);
+	bool flag=true;
+	k=0;
+	solve(n,D);
+	int i=0,j=k-1;
+	while(i<j)
+	{
+	    if(result[i]!=result[j])
+		{
+		   flag=false;break;
+		}
+		i++;j--;
+	}
+	if(flag) printf("Yes\n");
+	else printf("No\n");
+	printf("%d",result[0]);
+    for(int i=1;i<k;i++)
+		printf(" %d",result[i]);
+	return 0;
+}
+

@@ -1,0 +1,69 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<map>
+#include<iostream>
+using namespace std;
+map<string,vector<string>> m[5];
+int main()
+{
+	int i,n;
+	scanf("%d",&n);
+	char id[10],title[81],author[81],words[10001],publisher[81],year[10];
+	for(i=0;i<n;i++)
+	{
+	   scanf("%s",id);
+	   getchar();
+	   gets(title);
+	   m[0][title].push_back(id);
+	   gets(author);
+	   m[1][author].push_back(id);
+	   gets(words);
+	   int j=0,len=strlen(words);
+	   int v,u;
+	   while(j<len)
+	   {
+	       for(v=j;v<len;v++)
+			   if(words[v]==' ') break;
+		   string word="";
+		   for(u=j;u<v;u++)
+			   word+=words[u];
+		   if(v==len-1) word+=words[v];
+		   m[2][word].push_back(id);
+		   j=v+1;
+	   }
+	   gets(publisher);
+	   m[3][publisher].push_back(id);
+	   gets(year);
+	   m[4][year].push_back(id);
+	}
+	for(i=0;i<5;i++)
+	{
+		map<string,vector<string>>::iterator it;
+		for(it=m[i].begin();it!=m[i].end();it++)
+			sort(it->second.begin(),it->second.end());
+	}
+	int mm,flag;
+	char search[1001];
+	scanf("%d",&mm);
+	map<string,vector<string>>::iterator it;
+	for(i=0;i<mm;i++)
+	{
+	   scanf("%d: ",&flag);
+	   gets(search);
+	   printf("%d: %s\n",flag,search);
+	   it=m[flag-1].find(search);
+	   if(it!=m[flag-1].end())
+	   {
+	       vector<string> result = m[flag-1][search];  
+           for(int vv = 0; vv < result.size(); ++vv)  
+                   cout<<result[vv]<<endl;
+        }  
+            else printf("Not Found\n");  
+	   
+	}
+	return 0;
+}
+
