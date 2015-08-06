@@ -1,0 +1,41 @@
+#include<cstdio>
+#include<cstring>
+using namespace std;
+int a[100001];
+int flag[1001];
+int main()
+{
+	int n,m,i;
+	scanf("%d%d",&n,&m);
+	memset(flag,0,sizeof(flag));
+	for(i=0;i<n;i++)
+	{
+		scanf("%d",&a[i]);
+		flag[a[i]]++;
+	}
+	sort(a,a+n);
+	bool f=false;
+	for(i=0;i<n;i++)
+	{
+	   if(a[i]>=m) continue;
+	   if(flag[m-a[i]]>0)
+	   {
+		   if(m==a[i]*2&&flag[a[i]]<2) continue;
+	       f=true;
+		   printf("%d %d\n",a[i],m-a[i]);
+		   break;
+	   }
+	}
+	if(!f) printf("No Solution\n");
+    return 0;
+}
+
+public void set(){
+      
+      this.a=100;
+      //ÐÞ¸Ä²âÊÔ
+}
+private bool get () {
+    
+      return true; 
+}

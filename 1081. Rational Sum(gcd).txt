@@ -1,0 +1,72 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+#include<stack>
+using namespace std;
+long long tmp_up,tmp_down,sum_up,sum_down;
+long long gcd(long long a, long long b)     
+{
+    return b==0?a:gcd(b,a%b);
+} 
+void hj(long long up,long long down)
+{
+	bool neg=false;
+	if(up<0)
+	{ 
+		neg=true;up=-up;
+	}
+    long long com=gcd(up,down);
+	tmp_up=up/com;
+	tmp_down=down/com;
+	if(neg) tmp_up=-tmp_up;
+}
+void add(long long fz1,long long fm1,long long fz2,long long fm2)
+{
+	int neg=1;
+	long long add_up=fz1*fm2+fz2*fm1;
+	long long add_down=fm1*fm2;
+	hj(add_up,add_down);
+	sum_up=tmp_up;
+	sum_down=tmp_down;
+}
+void print(long long sum_up,long long sum_down)
+{
+   if(sum_up<0)
+   {
+      printf("-");
+	  sum_up=-sum_up;
+   }
+   if(sum_up>sum_down)
+   {
+	  long long in=sum_up/sum_down;
+	  sum_up=sum_up-in*sum_down;
+	  printf("%lld",in);
+	  if(sum_up!=0) printf(" %lld/%lld\n",sum_up,sum_down);
+   }
+   else 
+   {
+	  if(sum_up!=0) printf("%lld/%lld\n",sum_up,sum_down);
+	  else printf("0\n");
+   }
+}
+int main()
+{
+	int n,i,fz,fm;
+	scanf("%d",&n);
+	scanf("%d/%d",&fz,&fm);
+	hj(fz,fm);
+	sum_up=tmp_up;
+	sum_down=tmp_down;
+	for(i=1;i<n;i++)
+	{
+	   scanf("%d/%d",&fz,&fm);
+	   hj(fz,fm);
+	   add(sum_up,sum_down,tmp_up,tmp_down);
+	}
+	print(sum_up,sum_down);
+    return 0;
+} 

@@ -1,0 +1,157 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<algorithm>
+using namespace std;
+long long a,b,c;
+bool flag,neg;
+string s;
+long long gcd(long long a, long long b)     //gcd函数不好的话，本题最后一组测试数据会超时！！！
+{
+    return b==0?a:gcd(b,a%b);
+} 
+void xj(long long fz,long long fm)   //分子分母取绝对值化简
+{
+	neg=false;
+	if(fz==0)
+	{
+	   b=0;c=1;return;
+	}
+	if(fz*fm<0)
+	{ 
+		neg=true;
+		fz=abs(fz);fm=abs(fm);
+	}
+	long long com=gcd(fz,fm);
+	fz/=com;
+	fm/=com;
+	b=fz;c=fm;	
+}
+void normal()
+{
+    if(b>c)   //真分数
+   {
+	   if(b%c==0) 
+	   {
+		  flag=false;
+	      b=b/c;c=1;
+		  return;
+	   }
+	   flag=true;
+	   a=b/c;
+	   b=b-c*a;
+	}	
+	else  flag=false;  //假分数
+}
+void print(long long fz,long long fm)
+{
+   xj(fz,fm);  //分子分母取绝对值化简
+   normal();
+
+   if(b==0)
+   {
+	   printf("0");return;
+   }
+
+   if(neg)  printf("(-");
+   
+   if(flag) printf("%lld ",a);
+   
+   if(c==1) printf("%lld",b);
+   else printf("%lld/%lld",b,c);
+   if(neg) printf(")");
+   
+  
+}
+void pre_print(long long f_a,long long f_b,long long f_c,bool f_flag,bool f_neg )
+{
+   if(f_b==0)
+   {
+	   printf("0");return;
+   }
+
+   if(f_neg)  printf("(-");
+   
+   if(f_flag) printf("%lld ",f_a);
+   
+   if(f_c==1) printf("%lld",f_b);
+   else printf("%lld/%lld",f_b,f_c);
+   if(f_neg) printf(")");
+}
+void add(long long fz1,long long fm1,long long fz2,long long fm2)
+{
+   long long r_fz1,r_fz2,r_fm,r_fz;
+   r_fm=(long long)fm1*fm2;
+   r_fz1=fz1*fm2;
+   r_fz2=fz2*fm1;
+   r_fz=r_fz1+r_fz2;
+   print(r_fz,r_fm);
+}
+void mult(long long fz1,long long fm1,long long fz2,long long fm2)
+{
+   long long r_fm,r_fz;
+   r_fm=(long long)fm1*fm2;  
+   r_fz=(long long)fz1*fz2;
+   print(r_fz,r_fm);
+}
+int main()
+{
+	long long fz1,fm1,fz2,fm2;
+	long long f1_a,f1_b,f1_c,f2_a,f2_b,f2_c;
+	bool f1_flag,f1_neg,f2_flag,f2_neg;
+    scanf("%lld/%lld %lld/%lld",&fz1,&fm1,&fz2,&fm2);
+	xj(fz1,fm1);
+	if(fz1<0) fz1=-b;
+	else fz1=b;
+    fm1=c;
+
+	normal();
+	f1_flag=flag;
+	f1_neg=neg;
+	f1_a=a;f1_b=b;f1_c=c;
+	
+
+	xj(fz2,fm2);
+	if(fz2<0) fz2=-b;
+	else fz2=b;
+	fm2=c;
+
+	normal();
+	f2_flag=flag;
+	f2_neg=neg;
+	f2_a=a;f2_b=b;f2_c=c;
+	
+	pre_print(f1_a,f1_b,f1_c,f1_flag,f1_neg);
+	printf(" + ");
+	pre_print(f2_a,f2_b,f2_c,f2_flag,f2_neg);
+	printf(" = ");
+	add(fz1,fm1,fz2,fm2);
+	
+	printf("\n");
+
+	pre_print(f1_a,f1_b,f1_c,f1_flag,f1_neg);
+	printf(" - ");
+	pre_print(f2_a,f2_b,f2_c,f2_flag,f2_neg);
+	printf(" = ");
+	add(fz1,fm1,-fz2,fm2);
+
+	printf("\n");
+
+	pre_print(f1_a,f1_b,f1_c,f1_flag,f1_neg);
+	printf(" * ");
+	pre_print(f2_a,f2_b,f2_c,f2_flag,f2_neg);
+	printf(" = ");
+	mult(fz1,fm1,fz2,fm2);
+
+	printf("\n");
+	
+	pre_print(f1_a,f1_b,f1_c,f1_flag,f1_neg);
+	printf(" / ");
+	pre_print(f2_a,f2_b,f2_c,f2_flag,f2_neg);
+	printf(" = ");
+	if(b==0) printf("Inf");
+	else mult(fz1,fm1,fm2,fz2);
+	
+    return 0;
+} 

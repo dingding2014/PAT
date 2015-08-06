@@ -1,0 +1,59 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+map<string,int> m;
+bool check(char c)
+{
+	if(c>='0'&&c<='9'||c>='a'&&c<='z') return true;
+	return false;
+}
+char s[1048580];
+int main()
+{
+	int i,j;
+    gets(s);
+	int len=strlen(s);
+	for(i=0;i<len;i++)
+		if(s[i]>='A'&&s[i]<='Z') s[i]+=32;
+	i=0;
+    while(i<len)
+	{
+	   while(!check(s[i]))
+	   {
+		   i++;
+		   if(i>len-1) break;
+	   }
+	   j=i+1;
+	   if(j<len)
+	   {
+	   while(check(s[j]))
+	   {
+		   j++;
+		   if(j>len-1) break;
+	   }
+	   }   
+	   string tmp="";
+	   for(int t=i;t<j;t++)
+		   tmp+=s[t];
+	   m[tmp]++;
+	   i=j+1;
+	}
+	int max=0;
+	map<string,int>::iterator it;
+	string result;
+    for(it=m.begin();it!=m.end();++it)
+		if(it->second>max)
+		{
+		   max=it->second;
+		   result=it->first;
+		}
+	
+	cout<<result;
+	printf(" %d\n",max);
+    return 0;
+} 

@@ -1,0 +1,63 @@
+#include <cstdio>
+#include <cstring>
+#include<string>
+#include <cmath>
+#include<map>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+map<string ,int> m;
+struct node 
+{
+    char pos[6],next[6];
+	int data;
+}p[100001];
+int main()
+{
+	int n,k,i;
+	char start[6];
+	scanf("%s%d%d",&start,&n,&k);
+	getchar();
+	int f;
+	m.clear();
+	for(i=0;i<n;i++)
+	{
+		scanf("%s%d%s",&p[i].pos,&p[i].data,&p[i].next);
+		m[p[i].pos]=i;
+		if(strcmp(p[i].pos,start)==0) f=i;
+	}
+	int j=f;
+	int link[100001],result[100001];
+	int kk=0;
+	link[kk++]=f;
+	while(true)
+	{
+	    if(strcmp(p[j].next,"-1")==0) break;
+		j=m[p[j].next];
+		link[kk++]=j;
+		
+	}   
+	int kkk=0;
+	for(j=k-1;j<kk;j+=k)
+	{
+		for(int v=j;v>=j-k+1;v--)
+		{ 
+			result[kkk++]=link[v];
+		}
+	}
+	j=kk-kk%k;
+	while(j<kk)               //链表长度不一定是n，可能存在无效节点！
+	{
+	    result[kkk++]=link[j];
+		j++;
+	}
+	for(j=0;j<kkk-1;j++)
+		strcpy(p[result[j]].next,p[result[j+1]].pos);
+	strcpy(p[result[kkk-1]].next,"-1");
+	for(j=0;j<kkk;j++)
+	{
+	    int t=result[j];
+		printf("%s %d %s\n",p[t].pos,p[t].data,p[t].next);
+	}
+    return 0;
+} 
